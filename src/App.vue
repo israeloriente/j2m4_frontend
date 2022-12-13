@@ -1,60 +1,42 @@
 <template>
   <v-app>
-    <v-app-bar
-      app
-      color="primary"
-      dark
-    >
-      <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
+    <v-container class="ma-0 pa-0">
+      <v-navigation-drawer app permanent>
+        <v-list-item link to="/">
+          <v-list-item-content>
+            <v-list-item-title class="text-h6"> PARK-ing </v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
 
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        />
-      </div>
+        <v-divider></v-divider>
 
-      <v-spacer></v-spacer>
-
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
-      >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
-    </v-app-bar>
-
-    <v-main>
-      <HelloWorld/>
-    </v-main>
+        <v-list dense nav>
+          <v-list-item link to="/garages">
+            <v-list-item-content>
+              <v-list-item-title>Garages</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item link to="/rents">
+            <v-list-item-content>
+              <v-list-item-title>Rents</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+      </v-navigation-drawer>
+      <router-view class="all-content"/>
+    </v-container>
   </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld';
-
-export default {
-  name: 'App',
-
-  components: {
-    HelloWorld,
-  },
-
-  data: () => ({
-    //
-  }),
-};
+  export default {
+    name: "app",
+  };
 </script>
+
+<style>
+  .all-content {
+    position: absolute;
+    left: 256px;
+  }
+</style>
