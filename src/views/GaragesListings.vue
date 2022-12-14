@@ -15,20 +15,58 @@
     </v-row>
     <v-divider></v-divider>
 
-    <v-container>
-      <v-card
-        style="max-width: 70%"
-        class="my-8 mx-3"
-        elevation="0"
-      >
-      <v-row>
-        <v-col class="d-flex justify-center">
-      <v-btn color="blue" elevation="0" @click="moveToEdit('new')">
-        Create new garage
-      </v-btn>
-
-        </v-col>
-      </v-row>
+    <v-container :key="forceLoad">
+      <v-card style="max-width: 70%" class="my-8 mx-3">
+        <v-row class="ma-1">
+          <v-col>
+            <v-switch v-model="isAvailable" label="available now"> </v-switch>
+          </v-col>
+          <v-col>
+            <v-switch v-model="sortByPrice" label="sort by price"> </v-switch>
+          </v-col>
+          <v-col>
+            <v-switch v-model="descending" label="show cheapest"> </v-switch>
+          </v-col>
+          <v-col>
+            <v-menu
+              ref="menu"
+              v-model="menu"
+              :close-on-content-click="false"
+              :return-value.sync="dates"
+              transition="scale-transition"
+              offset-y
+              min-width="auto"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field
+                  v-model="dates"
+                  label="Rent period"
+                  prepend-icon="mdi-calendar"
+                  readonly
+                  v-bind="attrs"
+                  v-on="on"
+                ></v-text-field>
+              </template>
+              <v-date-picker v-model="dates" no-title range scrollable>
+                <v-spacer></v-spacer>
+                <v-btn text color="primary" @click="menu = false">
+                  Cancel
+                </v-btn>
+                <v-btn text color="primary" @click="$refs.menu.save(dates)">
+                  OK
+                </v-btn>
+              </v-date-picker>
+            </v-menu>
+          </v-col>
+          <v-col align-self="center">
+            <v-btn color="blue" elevation="0" @click="reload"> Apply </v-btn>
+          </v-col>
+          <v-col align-self="center">
+            <v-btn color="blue" elevation="0" @click="moveToEdit('new')">
+              Create new garage
+            </v-btn>
+          </v-col>
+        </v-row>
       </v-card>
       <v-card
         style="max-width: 70%"
@@ -39,9 +77,7 @@
         <v-row class="px-3">
           <v-col cols="2">
             <v-avatar class="ma-3" size="125" tile>
-              <v-img
-                :src="getImg(item)"
-              ></v-img>
+              <v-img :src="getImg(item)"></v-img>
             </v-avatar>
           </v-col>
           <v-col cols="4">
@@ -57,11 +93,7 @@
             </v-row>
             <v-row class="mx-3">
               <v-col class="text-body-2 pa-0">
-                {{
-                  `Available ${
-                    item.isAvailable ? "now" : "from " + ''
-                  }`
-                }}
+                {{ `Available ${item.isAvailable ? "now" : "from " + ""}` }}
               </v-col>
             </v-row>
           </v-col>
@@ -87,6 +119,11 @@
   export default {
     name: "GaragesListings",
     data: () => ({
+      forceLoad: false,
+      isAvailable: null,
+      sortByPrice: null,
+      descending: null,
+      dates: [],
       garages: [
         // {
         //   id: 1,
@@ -107,12 +144,27 @@
       ],
     }),
     created() {
-      this.api.get('/listings').then((r) => {
-        console.log(r.data)
-        this.garages = r.data;
-      })
+      this.reload();
     },
     methods: {
+      reload() {
+        let url = `/listings?isAvailable=${this.isAvailable}&sortByPrice=${this.sortByPrice}&descending=${this.descending}`;
+
+        if (this.dates.length > 0) {
+          url += `&startDate=${this.dates[0]}&endDate=${this.dates[1]}`;
+        }
+
+        this.api
+          .get(url)
+          .then((r) => {
+            console.log(r.data);
+            this.garages = r.data;
+            this.forceLoad = !this.forceLoad;
+          })
+          .catch((e) => {
+            console.log(e);
+          });
+      },
       moveToEdit(id) {
         this.$router.push({ name: "EditGarage", params: { id: id } });
       },
@@ -120,11 +172,15 @@
         this.$router.push({ name: "RentGarage", params: { id: id } });
       },
       getImg(item) {
-        if (item.imgPath !== '' && item.imgPath !== null && item.imgPath !== "string") {
-          return require(item.imgPath)
+        if (
+          item.imgPath !== "" &&
+          item.imgPath !== null &&
+          item.imgPath !== "string"
+        ) {
+          return require(item.imgPath);
         }
-        return ''
-      }
+        return "";
+      },
     },
   };
 </script>
