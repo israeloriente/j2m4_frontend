@@ -22,16 +22,37 @@
           <v-card class="ma-3 pa-3">
             <v-row>
               <v-col>
-                <v-text-field label="Address" disabled></v-text-field>
+                <v-text-field
+                  label="Address"
+                  v-model="address"
+                  disabled
+                ></v-text-field>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col>
+                <v-text-field
+                  label="City"
+                  v-model="city"
+                  disabled
+                ></v-text-field>
               </v-col>
             </v-row>
             <v-row>
               <v-col cols="3">
-                <v-text-field label="Price/Day" disabled></v-text-field>
+                <v-text-field
+                  disabled
+                  label="Price/Day"
+                  v-model="priceDay"
+                ></v-text-field>
               </v-col>
               <v-spacer></v-spacer>
               <v-col cols="6">
-                <v-text-field label="Owner ID" disabled></v-text-field>
+                <v-text-field
+                  label="Owner ID"
+                  v-model="ownerId"
+                  disabled
+                ></v-text-field>
               </v-col>
             </v-row>
           </v-card>
@@ -69,17 +90,17 @@
                 </v-menu>
               </v-col>
               <v-col cols="2">
-              <v-spacer></v-spacer>
+                <v-spacer></v-spacer>
               </v-col>
               <v-col>
-                <v-text-field label="Client ID" />
+                <v-text-field label="Client ID" v-model="clientId" />
               </v-col>
             </v-row>
             <v-row>
               <v-col class="d-flex justify-end">
-              <v-btn elevation="0" color="blue">
-                CREATE RENT
-              </v-btn>
+                <v-btn elevation="0" color="blue" @click="rent">
+                  CREATE RENT
+                </v-btn>
               </v-col>
             </v-row>
           </v-card>
@@ -91,29 +112,49 @@
 
 <script>
   export default {
-    name: "GaragesDetails",
+    name: "RentDetails",
     data: () => ({
       menu: false,
       dates: [],
-      garages: [
-        {
-          id: 1,
-          imgPath: "",
-          address: "SOME ADDRESS",
-          pricePerDay: 123,
-          isAvailable: 1,
-          startDate: "1999-07-02",
-        },
-        {
-          id: 2,
-          imgPath: "",
-          address: "SOME ADDRESS",
-          pricePerDay: 123,
-          isAvailable: 0,
-          startDate: "1999-07-02",
-        },
-      ],
+      address: "",
+      priceDay: "",
+      ownerId: "",
+      garageId: "",
+      city: "",
+      clientId: "",
     }),
-    methods: {},
+    methods: {
+      rent() {
+        let payload = {
+          garageId: this.garageId,
+          clientId: this.clientId,
+          startDate: this.dates[0],
+          expectedEndDate: this.dates[1],
+        };
+
+        this.api
+          .post("/rents", payload)
+          .then((r) => {
+            console.log("response", r);
+          })
+          .catch((err) => {
+            alert("error on creating rent. Error: ", err);
+          });
+      },
+    },
+    created() {
+      this.garageId = this.$route.params.id;
+      this.api
+        .get(`/garages/${this.garageId}`)
+        .then((r) => {
+          this.address = r.data.address;
+          this.priceDay = r.data.pricePerDay;
+          this.ownerId = r.data.ownerId;
+          this.city = r.data.city;
+        })
+        .catch((err) => {
+          alert("error on getting garage. Error: ", err);
+        });
+    },
   };
 </script>
