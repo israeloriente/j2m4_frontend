@@ -94,14 +94,25 @@
           city: this.city,
         };
 
-        this.api
-          .put(`/garages/${this.garageId}`, payload)
-          .then((r) => {
-            console.log(r);
-          })
-          .catch((err) => {
-            alert("error on updating garage. Error: ", err);
-          });
+        if (this.garageId === "new") {
+          this.api
+            .put(`/garages/${this.garageId}`, payload)
+            .then((r) => {
+              console.log(r);
+            })
+            .catch((err) => {
+              alert("error on updating garage. Error: ", err);
+            });
+        } else {
+          this.api
+            .post(`/garages`, payload)
+            .then((r) => {
+              console.log(r);
+            })
+            .catch((err) => {
+              alert("error on updating garage. Error: ", err);
+            });
+        }
       },
       deleteInfo() {
         this.api
@@ -118,7 +129,7 @@
       this.garageId = this.$route.params.id;
       if (this.garageId === "new") return;
 
-      this.axios
+      this.api
         .get(`/garages/${this.garageId}`)
         .then((r) => {
           this.address = r.data.address;
