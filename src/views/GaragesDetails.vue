@@ -76,17 +76,32 @@
     }),
     methods: {
       saveInfo() {
-        let payload = { address: this.address, priceDay: this.priceDay, id: this.ownerId}
+        console.log("testing save info");
+        let payload = { address: this.address, pricePerDay: this.priceDay, ownerId: this.ownerId}
         payload;
-        // Call post endpoint using payload
+        this.api.put(`/garages/${this.garageId}`, payload).then((r) => {
+          console.log(r);
+        }).catch((err) => {
+          alert("error on updating garage. Error: ", err)
+        })
       },
       deleteInfo() {
-        // Call delete endpoint using garage Id as params
+        this.api.delete(`/garages/${this.garageId}`).then((r) => {
+          console.log("response", r);
+        }).catch((err) => {
+          alert("error on deleting garage. Error: ", err)
+        })
       }
     },
     created() {
       this.garageId = this.$route.params.id
-      // Call get endpoint using garage Id as params
+      this.axios.get(`/garages/${this.garageId}`).then((r)=> {
+        this.address = r.address;
+        this.priceDay = r.pricePerDay;
+        this.ownerId = r.ownerId;
+      }).catch((err) => {
+        alert("error on getting garage. Error: ", err)
+      })
     }
   };
 </script>
