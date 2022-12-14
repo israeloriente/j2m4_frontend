@@ -39,8 +39,16 @@
               </v-col>
             </v-row>
             <v-row>
+              <v-col>
+                <v-text-field label="City" v-model="city"></v-text-field>
+              </v-col>
+            </v-row>
+            <v-row>
               <v-col cols="3">
-                <v-text-field label="Price/Day" v-model="priceDay"></v-text-field>
+                <v-text-field
+                  label="Price/Day"
+                  v-model="priceDay"
+                ></v-text-field>
               </v-col>
               <v-spacer></v-spacer>
               <v-col cols="6">
@@ -49,7 +57,9 @@
             </v-row>
             <v-row>
               <v-col>
-                <v-btn elevation="0" color="blue" @click="saveInfo"> Save </v-btn>
+                <v-btn elevation="0" color="blue" @click="saveInfo">
+                  Save
+                </v-btn>
               </v-col>
               <v-spacer></v-spacer>
               <v-col class="d-flex justify-end">
@@ -73,35 +83,52 @@
       priceDay: "",
       ownerId: "",
       garageId: "",
+      city: "",
     }),
     methods: {
       saveInfo() {
-        console.log("testing save info");
-        let payload = { address: this.address, pricePerDay: this.priceDay, ownerId: this.ownerId}
-        payload;
-        this.api.put(`/garages/${this.garageId}`, payload).then((r) => {
-          console.log(r);
-        }).catch((err) => {
-          alert("error on updating garage. Error: ", err)
-        })
+        let payload = {
+          address: this.address,
+          pricePerDay: this.priceDay,
+          ownerId: this.ownerId,
+          city: this.city,
+        };
+
+        this.api
+          .put(`/garages/${this.garageId}`, payload)
+          .then((r) => {
+            console.log(r);
+          })
+          .catch((err) => {
+            alert("error on updating garage. Error: ", err);
+          });
       },
       deleteInfo() {
-        this.api.delete(`/garages/${this.garageId}`).then((r) => {
-          console.log("response", r);
-        }).catch((err) => {
-          alert("error on deleting garage. Error: ", err)
-        })
-      }
+        this.api
+          .delete(`/garages/${this.garageId}`)
+          .then((r) => {
+            console.log("response", r);
+          })
+          .catch((err) => {
+            alert("error on deleting garage. Error: ", err);
+          });
+      },
     },
     created() {
-      this.garageId = this.$route.params.id
-      this.axios.get(`/garages/${this.garageId}`).then((r)=> {
-        this.address = r.address;
-        this.priceDay = r.pricePerDay;
-        this.ownerId = r.ownerId;
-      }).catch((err) => {
-        alert("error on getting garage. Error: ", err)
-      })
-    }
+      this.garageId = this.$route.params.id;
+      if (this.garageId === "new") return;
+
+      this.axios
+        .get(`/garages/${this.garageId}`)
+        .then((r) => {
+          this.address = r.data.address;
+          this.priceDay = r.data.pricePerDay;
+          this.ownerId = r.data.ownerId;
+          this.city = r.data.city;
+        })
+        .catch((err) => {
+          alert("error on getting garage. Error: ", err);
+        });
+    },
   };
 </script>
