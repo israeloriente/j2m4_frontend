@@ -18,6 +18,20 @@
     <v-container>
       <v-card
         style="max-width: 70%"
+        class="my-8 mx-3"
+        elevation="0"
+      >
+      <v-row>
+        <v-col class="d-flex justify-center">
+      <v-btn color="blue" elevation="0" @click="moveToEdit('new')">
+        Create new garage
+      </v-btn>
+
+        </v-col>
+      </v-row>
+      </v-card>
+      <v-card
+        style="max-width: 70%"
         v-for="(item, i) in garages"
         :key="i"
         class="my-8 mx-3"
@@ -26,11 +40,7 @@
           <v-col cols="2">
             <v-avatar class="ma-3" size="125" tile>
               <v-img
-                :src="
-                  item.imgPath !== '' && item.imgPath !== null
-                    ? require(item.imgPath)
-                    : ''
-                "
+                :src="getImg(item)"
               ></v-img>
             </v-avatar>
           </v-col>
@@ -49,7 +59,7 @@
               <v-col class="text-body-2 pa-0">
                 {{
                   `Available ${
-                    item.isAvailable ? "now" : "from " + item.startDate
+                    item.isAvailable ? "now" : "from " + ''
                   }`
                 }}
               </v-col>
@@ -78,24 +88,30 @@
     name: "GaragesListings",
     data: () => ({
       garages: [
-        {
-          id: 1,
-          imgPath: "",
-          address: "SOME ADDRESS",
-          pricePerDay: 123,
-          isAvailable: 1,
-          startDate: "1999-07-02",
-        },
-        {
-          id: 2,
-          imgPath: "",
-          address: "SOME ADDRESS",
-          pricePerDay: 123,
-          isAvailable: 0,
-          startDate: "1999-07-02",
-        },
+        // {
+        //   id: 1,
+        //   imgPath: "",
+        //   address: "SOME ADDRESS",
+        //   pricePerDay: 123,
+        //   isAvailable: 1,
+        //   startDate: "1999-07-02",
+        // },
+        // {
+        //   id: 2,
+        //   imgPath: "",
+        //   address: "SOME ADDRESS",
+        //   pricePerDay: 123,
+        //   isAvailable: 0,
+        //   startDate: "1999-07-02",
+        // },
       ],
     }),
+    created() {
+      this.api.get('/listings').then((r) => {
+        console.log(r.data)
+        this.garages = r.data;
+      })
+    },
     methods: {
       moveToEdit(id) {
         this.$router.push({ name: "EditGarage", params: { id: id } });
@@ -103,6 +119,12 @@
       moveToRent(id) {
         this.$router.push({ name: "RentGarage", params: { id: id } });
       },
+      getImg(item) {
+        if (item.imgPath !== '' && item.imgPath !== null && item.imgPath !== "string") {
+          return require(item.imgPath)
+        }
+        return ''
+      }
     },
   };
 </script>
