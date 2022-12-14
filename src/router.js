@@ -10,7 +10,25 @@ export default new Router({
       path: "/",
       alias: "/home",
       name: "Home",
-      component: () => import("./components/HelloWorld")
+      component: () => import("./views/GaragesListings")
+    },
+    {
+      path: "/garage",
+      alias: "/home",
+      name: "Home",
+      component: () => import("./views/GaragesListings")
+    },
+    {
+      path: "/garage/:id",
+      alias: "/garage",
+      name: "EditGarage",
+      component: () => import("./views/GaragesDetails")
+    },
+    {
+      path: "/rent/:id",
+      alias: "/garage",
+      name: "RentGarage",
+      component: () => import("./views/RentsDetails")
     },
   ]
 });

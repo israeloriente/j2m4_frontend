@@ -11,7 +11,7 @@
         <v-divider></v-divider>
 
         <v-list dense nav>
-          <v-list-item link to="/garages">
+          <v-list-item link to="/">
             <v-list-item-content>
               <v-list-item-title>Garages</v-list-item-title>
             </v-list-item-content>
