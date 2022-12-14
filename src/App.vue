@@ -23,7 +23,7 @@
           </v-list-item>
         </v-list>
       </v-navigation-drawer>
-      <router-view class="all-content"/>
+      <router-view class="all-content" />
     </v-container>
   </v-app>
 </template>

@@ -25,6 +25,12 @@ export default new Router({
       component: () => import("./views/GaragesDetails")
     },
     {
+      path: "/updates/:id",
+      alias: "/update",
+      name: "RentsUpdates",
+      component: () => import("./views/RentsUpdates")
+    },
+    {
       path: "/rent/:id",
       alias: "/garage",
       name: "RentGarage",
