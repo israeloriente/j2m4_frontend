@@ -6,7 +6,7 @@
     <v-divider></v-divider>
 
     <v-container :key="forceLoad">
-      <v-card style="max-width: 70%" class="my-8 mx-3">
+      <v-card class="my-8 mx-3">
         <v-row class="ma-1">
           <v-col>
             <v-switch v-model="isAvailable" label="available now"> </v-switch>
@@ -59,7 +59,6 @@
         </v-row>
       </v-card>
       <v-card
-        style="max-width: 70%"
         v-for="(item, i) in garages"
         :key="i"
         class="my-8 mx-3"

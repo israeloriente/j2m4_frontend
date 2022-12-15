@@ -84,6 +84,7 @@
       ownerId: "",
       garageId: "",
       city: "",
+      imagePath: "",
     }),
     methods: {
       saveInfo() {
@@ -92,6 +93,7 @@
           pricePerDay: this.priceDay,
           ownerId: this.ownerId,
           city: this.city,
+          imagePath: this.imagePath,
         };
 
         if (this.garageId === "new") {
@@ -136,6 +138,7 @@
           this.priceDay = r.data.pricePerDay;
           this.ownerId = r.data.ownerId;
           this.city = r.data.city;
+          this.imagePath = r.data.imagePath;
         })
         .catch((err) => {
           alert("error on getting garage. Error: ", err);
